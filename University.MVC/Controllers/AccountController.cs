@@ -1,24 +1,26 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
-using PIS.DAL;
 using System.Security.Claims;
-using University.MVC.Models;
+using University.Application.Models;
+using University.Application.Services.Abstract;
 
 namespace University.MVC.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ICookieUserService _service;
 
-        public AccountController(ApplicationDbContext context)
+        public AccountController(ICookieUserService service)
         {
-            _context = context;
+            _service = service;
         }
 
         public IActionResult Index()
         {
-            if (HttpContext.User.Identity.IsAuthenticated)
+            ClaimsPrincipal currentUser = HttpContext.User;
+
+            if (currentUser.Identity.IsAuthenticated)
             {
                 return RedirectToAction("Index", "Home");
             }
@@ -27,47 +29,17 @@ namespace University.MVC.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(UserLogin userLogin)
+        public async Task<IActionResult> Login(UserRequest userRequest)
         {
-            bool userIsValid = _context.User.Any(u => u.Username == userLogin.Username && u.Password == userLogin.Password);
-            
-            if(userIsValid)
+            bool isLoggedIn = await _service.Login(userRequest);
+
+            if(isLoggedIn)
             {
-                var claims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.Name, userLogin.Username),
-                    new Claim(ClaimTypes.NameIdentifier, userLogin.Username),
-                    new Claim(ClaimTypes.Role, "Admin"),
-                    new Claim(ClaimTypes.Country, "Ukraine")
-                };
-
-                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-
-                var authProperties = new AuthenticationProperties
-                {
-                    AllowRefresh = true,
-                    // Refreshing the authentication session should be allowed.
-
-                    IsPersistent = true,
-                    // Whether the authentication session is persisted across 
-                    // multiple requests. Required when setting the 
-                    // ExpireTimeSpan option of CookieAuthenticationOptions 
-                    // set with AddCookie. Also required when setting 
-                    // ExpiresUtc.
-                };
-
-                await HttpContext.SignInAsync(
-                    CookieAuthenticationDefaults.AuthenticationScheme,
-                    new ClaimsPrincipal(claimsIdentity),
-                    authProperties);
-
                 return RedirectToAction("Index", "Home");
             }
-            else
-            {
-                ViewData["Error"] = "Invalid username or password or current user does not exist";
-                return View("Index");
-            }
+
+            ViewData["Error"] = "Invalid username or password. Current user does not exist.";
+            return View("Index");
         }
 
         public async Task<IActionResult> Logout()

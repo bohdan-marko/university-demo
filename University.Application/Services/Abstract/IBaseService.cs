@@ -1,4 +1,4 @@
-﻿namespace University.WebAPI.Services.Abstract
+﻿namespace University.Application.Services.Abstract
 {
     public interface IBaseService<T> where T : class
     {

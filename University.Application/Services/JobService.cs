@@ -1,14 +1,14 @@
 ﻿using PIS.DAL.Models;
 using PIS.DAL.Repositories;
-using University.WebAPI.Services.Abstract;
+using University.Application.Services.Abstract;
 
-namespace University.WebAPI.Services
+namespace University.Application.Services
 {
-    public class WorkplaceService : IBaseService<Workplace>
+    public class JobService : IBaseService<Job>
     {
-        private readonly IBaseRepository<Workplace> _repository;
+        private readonly IBaseRepository<Job> _repository;
 
-        public WorkplaceService(IBaseRepository<Workplace> repository)
+        public JobService(IBaseRepository<Job> repository)
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
@@ -26,12 +26,12 @@ namespace University.WebAPI.Services
             }
         }
 
-        public async Task<Workplace> Get(int id)
+        public async Task<Job> Get(int id)
         {
             try
             {
-                var workplace = await _repository.GetAsync(id);
-                return workplace;
+                var job = await _repository.GetAsync(id);
+                return job;
             }
             catch (Exception)
             {
@@ -39,12 +39,12 @@ namespace University.WebAPI.Services
             }
         }
 
-        public async Task<IEnumerable<Workplace>> GetAll()
+        public async Task<IEnumerable<Job>> GetAll()
         {
             try
             {
-                var workplaces = await _repository.GetAllAsync();
-                return workplaces;
+                var jobs = await _repository.GetAllAsync();
+                return jobs;
             }
             catch (Exception)
             {
@@ -52,7 +52,7 @@ namespace University.WebAPI.Services
             }
         }
 
-        public async Task<bool> Insert(Workplace entity)
+        public async Task<bool> Insert(Job entity)
         {
             try
             {
@@ -65,7 +65,7 @@ namespace University.WebAPI.Services
             }
         }
 
-        public async Task<bool> Update(Workplace entity)
+        public async Task<bool> Update(Job entity)
         {
             try
             {

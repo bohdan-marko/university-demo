@@ -9,37 +9,38 @@ namespace PIS.DAL.Repositories
     public class BaseRepository<T> : IBaseRepository<T> where T : BaseEntity
     {
         private readonly ApplicationDbContext _context;
-        private readonly DbSet<T> _currentSet;
+        
+        public DbSet<T> CurrentSet { get; set; }
 
         public BaseRepository(ApplicationDbContext context)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
-            _currentSet = _context.Set<T>();
+            CurrentSet = _context.Set<T>();
         }
 
         public async Task<int> DeleteAsync(int id)
         {
-            var entity = await _currentSet.FindAsync(id);
+            var entity = await CurrentSet.FindAsync(id);
 
             if (entity is null)
                 throw new ArgumentNullException(nameof(entity));
 
-            _currentSet.Remove(entity);
+            CurrentSet.Remove(entity);
             return await _context.SaveChangesAsync();
         }
 
         public async Task<List<T>> GetAllAsync() 
-            => await _currentSet.ToListAsync();
+            => await CurrentSet.ToListAsync();
 
         public async Task<T> GetAsync(int id) 
-            => await _currentSet.FindAsync(id);
+            => await CurrentSet.FindAsync(id);
 
         public async Task<int> InsertAsync(T entity)
         {
             if (entity is null)
                 throw new ArgumentNullException(nameof(entity));
 
-            await _currentSet.AddAsync(entity);
+            await CurrentSet.AddAsync(entity);
             return await _context.SaveChangesAsync();
         }
 
@@ -51,7 +52,7 @@ namespace PIS.DAL.Repositories
             if (entity is null)
                 throw new ArgumentNullException(nameof(entity));
 
-            _currentSet.Update(entity);
+            CurrentSet.Update(entity);
             return await _context.SaveChangesAsync();
         }
     }

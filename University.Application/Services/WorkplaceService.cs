@@ -1,14 +1,14 @@
 ﻿using PIS.DAL.Models;
 using PIS.DAL.Repositories;
-using University.WebAPI.Services.Abstract;
+using University.Application.Services.Abstract;
 
-namespace University.WebAPI.Services
+namespace University.Application.Services
 {
-    public class WorkerService : IBaseService<Worker>
+    public class WorkplaceService : IBaseService<Workplace>
     {
-        private readonly IBaseRepository<Worker> _repository;
+        private readonly IBaseRepository<Workplace> _repository;
 
-        public WorkerService(IBaseRepository<Worker> repository)
+        public WorkplaceService(IBaseRepository<Workplace> repository)
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
@@ -26,12 +26,12 @@ namespace University.WebAPI.Services
             }
         }
 
-        public async Task<Worker> Get(int id)
+        public async Task<Workplace> Get(int id)
         {
             try
             {
-                var worker = await _repository.GetAsync(id);
-                return worker;
+                var workplace = await _repository.GetAsync(id);
+                return workplace;
             }
             catch (Exception)
             {
@@ -39,12 +39,12 @@ namespace University.WebAPI.Services
             }
         }
 
-        public async Task<IEnumerable<Worker>> GetAll()
+        public async Task<IEnumerable<Workplace>> GetAll()
         {
             try
             {
-                var workers = await _repository.GetAllAsync();
-                return workers;
+                var workplaces = await _repository.GetAllAsync();
+                return workplaces;
             }
             catch (Exception)
             {
@@ -52,7 +52,7 @@ namespace University.WebAPI.Services
             }
         }
 
-        public async Task<bool> Insert(Worker entity)
+        public async Task<bool> Insert(Workplace entity)
         {
             try
             {
@@ -65,7 +65,7 @@ namespace University.WebAPI.Services
             }
         }
 
-        public async Task<bool> Update(Worker entity)
+        public async Task<bool> Update(Workplace entity)
         {
             try
             {

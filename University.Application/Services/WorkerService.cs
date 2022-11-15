@@ -1,14 +1,14 @@
 ﻿using PIS.DAL.Models;
 using PIS.DAL.Repositories;
-using University.WebAPI.Services.Abstract;
+using University.Application.Services.Abstract;
 
-namespace University.WebAPI.Services
+namespace University.Application.Services
 {
-    public class JobService : IBaseService<Job>
+    public class WorkerService : IBaseService<Worker>
     {
-        private readonly IBaseRepository<Job> _repository;
+        private readonly IBaseRepository<Worker> _repository;
 
-        public JobService(IBaseRepository<Job> repository)
+        public WorkerService(IBaseRepository<Worker> repository)
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
         }
@@ -26,12 +26,12 @@ namespace University.WebAPI.Services
             }
         }
 
-        public async Task<Job> Get(int id)
+        public async Task<Worker> Get(int id)
         {
             try
             {
-                var job = await _repository.GetAsync(id);
-                return job;
+                var worker = await _repository.GetAsync(id);
+                return worker;
             }
             catch (Exception)
             {
@@ -39,12 +39,12 @@ namespace University.WebAPI.Services
             }
         }
 
-        public async Task<IEnumerable<Job>> GetAll()
+        public async Task<IEnumerable<Worker>> GetAll()
         {
             try
             {
-                var jobs = await _repository.GetAllAsync();
-                return jobs;
+                var workers = await _repository.GetAllAsync();
+                return workers;
             }
             catch (Exception)
             {
@@ -52,7 +52,7 @@ namespace University.WebAPI.Services
             }
         }
 
-        public async Task<bool> Insert(Job entity)
+        public async Task<bool> Insert(Worker entity)
         {
             try
             {
@@ -65,7 +65,7 @@ namespace University.WebAPI.Services
             }
         }
 
-        public async Task<bool> Update(Job entity)
+        public async Task<bool> Update(Worker entity)
         {
             try
             {

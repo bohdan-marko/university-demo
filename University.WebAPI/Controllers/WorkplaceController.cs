@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PIS.DAL.Models;
-using University.WebAPI.Services.Abstract;
+using University.Application.Services.Abstract;
 
-namespace University.WebAPI.Controllers
+namespace University.Application.Controllers
 {
     [Authorize]
     [ApiController]
@@ -39,7 +39,6 @@ namespace University.WebAPI.Controllers
         {
             var result = await _service.Insert(new Workplace
             {
-                WorkplaceID = workplace.WorkplaceID,
                 ShortName = workplace.ShortName,
                 Workers = workplace.Workers,
                 LongName = workplace.LongName,

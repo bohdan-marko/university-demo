@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PIS.DAL\PIS.DAL.csproj" />
+    <ProjectReference Include="..\University.Application\University.Application.csproj" />
   </ItemGroup>
 
 </Project>

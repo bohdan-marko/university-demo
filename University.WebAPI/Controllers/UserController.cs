@@ -1,21 +1,23 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using University.WebAPI.Models;
-using University.WebAPI.Services.Abstract;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using University.Application.Models;
+using University.Application.Services.Abstract;
 
-namespace University.WebAPI.Controllers
+namespace University.Application.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
     public class UserController : Controller
     {
-        private readonly IUserService _service;
+        private readonly IJwtUserService _service;
 
-        public UserController(IUserService service)
+        public UserController(IJwtUserService service)
         {
             _service = service ?? throw new ArgumentNullException(nameof(service));
         }
 
-
+        
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetUsers()
         {
@@ -27,12 +29,14 @@ namespace University.WebAPI.Controllers
         [HttpPost("authenticate")]
         public async Task<IActionResult> Authenticate([FromBody] UserRequest userRequest)
         {
-            var userToken = new TokenResponse
+            var response = await _service.Authenticate(userRequest);
+
+            if (response.ErrorMessages.Any())
             {
-                JwtToken = await _service.Authenticate(userRequest.Username, userRequest.Password)
-            };
-            
-            return string.IsNullOrEmpty(userToken.JwtToken) ? BadRequest() : Ok(userToken);
+                return BadRequest(response.ErrorMessages);
+            }
+
+            return Ok(response.UserResponse);
         }
     }
 }

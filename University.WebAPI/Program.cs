@@ -5,8 +5,9 @@ using PIS.DAL;
 using PIS.DAL.Models;
 using PIS.DAL.Repositories;
 using System.Text;
-using University.WebAPI.Services;
-using University.WebAPI.Services.Abstract;
+using University.Application.Services;
+using University.Application.Services.Abstract;
+using University.WebAPI.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,12 +39,17 @@ builder.Services.AddAuthentication(x =>
 builder.Services.AddDbContext<ApplicationDbContext>(
         options => options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")));
 
+builder.Services.AddOptions();
+builder.Services.Configure<JwtSettings>(
+    builder.Configuration.GetSection("JwtSettings"));
+
 //Inject services
 builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped<IBaseService<Worker>, WorkerService>();
 builder.Services.AddScoped<IBaseService<Workplace>, WorkplaceService>();
 builder.Services.AddScoped<IBaseService<Job>, JobService>();
-builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IJwtUserService, UserService>();
 
 var app = builder.Build();
 
