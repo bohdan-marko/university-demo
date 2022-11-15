@@ -6,15 +6,10 @@ namespace PIS.DAL
 {
     public class ApplicationDbContext : DbContext
     {
-        //public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-        //    : base(options)
-        //{
-
-        //}
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+            : base(options)
         {
-            optionsBuilder.UseSqlServer(@"Server=.;Database=PIS_Lab5_EFCore;Trusted_Connection=True;");
+
         }
 
         public DbSet<Job> Job { get; set; }
