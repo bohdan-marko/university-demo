@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PIS.DAL;
@@ -6,6 +7,7 @@ using PIS.DAL.Models;
 
 namespace University.MVC.Controllers
 {
+    [Authorize]
     public class WorkerController : Controller
     {
         private readonly ApplicationDbContext _context;
