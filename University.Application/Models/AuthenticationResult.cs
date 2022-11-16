@@ -2,6 +2,6 @@
 
 public class AuthenticationResult
 {
-    public UserResponse UserResponse { get; set; }
+    public string Token { get; set; }
     public List<string> ErrorMessages { get; set; }
 }

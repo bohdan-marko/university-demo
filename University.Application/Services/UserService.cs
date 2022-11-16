@@ -65,13 +65,14 @@ namespace University.Application.Services
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            user.Token = tokenHandler.WriteToken(token);
-
+            var createdToken = tokenHandler.WriteToken(token);
+            
+            user.Token = createdToken;
             await _repository.SaveChangesAsync();
 
             return new AuthenticationResult 
             {
-                UserResponse = _mapper.Map<UserResponse>(user),
+                Token = createdToken,
                 ErrorMessages = new List<string>()
             };
         }

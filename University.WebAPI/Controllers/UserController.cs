@@ -30,13 +30,7 @@ namespace University.Application.Controllers
         public async Task<IActionResult> Authenticate([FromBody] UserRequest userRequest)
         {
             var response = await _service.Authenticate(userRequest);
-
-            if (response.ErrorMessages.Any())
-            {
-                return BadRequest(response.ErrorMessages);
-            }
-
-            return Ok(response.UserResponse);
+            return response.ErrorMessages.Any() ? BadRequest(response) : Ok(response);
         }
     }
 }
