@@ -5,6 +5,7 @@ using University.Application.Services.Abstract;
 using University.Application.Services;
 using University.DAL.Repositories;
 using University.Application.Configurations;
+using University.Application.MappingProfiles;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +27,8 @@ builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddSingleton<IJwtSettings, JwtSettings>();
 builder.Services.AddScoped<ICookieUserService, UserService>();
+
+builder.Services.AddAutoMapper(typeof(MapperProfile));
 
 var app = builder.Build();
 

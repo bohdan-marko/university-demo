@@ -12,7 +12,7 @@ namespace University.MVC.Controllers
 
         public WorkersController(ApplicationDbContext context)
         {
-            _context = context;
+            _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
         // GET: Workers
@@ -55,14 +55,11 @@ namespace University.MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("WorkerID,Name,EmailAddress,IsAdmin,WorkplaceID")] Worker worker)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(worker);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["WorkplaceID"] = new SelectList(_context.Workplace, "WorkplaceID", "WorkplaceID", worker.WorkplaceID);
-            return View(worker);
+            worker.Workplace = _context.Workplace.Find(worker.WorkplaceID) ?? throw new Exception($"Workplace with ID {worker.WorkplaceID} not found");
+
+            _context.Add(worker);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Workers/Edit/5
