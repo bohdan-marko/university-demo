@@ -1,9 +1,10 @@
 using Microsoft.EntityFrameworkCore;
-using PIS.DAL;
+using University.DAL;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using University.Application.Services.Abstract;
 using University.Application.Services;
-using PIS.DAL.Repositories;
+using University.DAL.Repositories;
+using University.Application.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +24,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(
 //Inject services
 builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddSingleton<IJwtSettings, JwtSettings>();
 builder.Services.AddScoped<ICookieUserService, UserService>();
 
 var app = builder.Build();

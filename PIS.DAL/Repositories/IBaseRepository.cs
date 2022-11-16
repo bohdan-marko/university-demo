@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PIS.DAL.Models;
+using University.DAL.Contracts.Base;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace PIS.DAL.Repositories
+namespace University.DAL.Repositories
 {
     public interface IBaseRepository<T> where T : BaseEntity
     {

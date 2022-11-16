@@ -1,33 +1,35 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using PIS.DAL.Contracts;
-using PIS.DAL.Repositories;
+using University.DAL.Domain;
+using University.DAL.Repositories;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using University.Application.Models;
 using University.Application.Services.Abstract;
-using University.WebAPI.Configurations;
+using University.Application.Configurations;
+using AutoMapper;
 
 namespace University.Application.Services
 {
     public class UserService : IJwtUserService, ICookieUserService
     {
-        private readonly JwtSettings _settings;
         private readonly IBaseRepository<User> _repository;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IJwtSettings _settings;
+        private readonly IMapper _mapper;
         
         private const string Country = "Ukraine";
+        private const string Role = "Admin";
 
-        public UserService(IOptions<JwtSettings> options, IBaseRepository<User> repository, IHttpContextAccessor httpContextAccessor)
+        public UserService(IBaseRepository<User> repository, IHttpContextAccessor httpContextAccessor, IJwtSettings settings, IMapper mapper)
         {
-            _settings = options.Value;
-            _repository = repository;
-            _httpContextAccessor = httpContextAccessor;
+            _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+            _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
+            _settings = settings ?? throw new ArgumentNullException(nameof(settings));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         public async Task<AuthenticationResult> Authenticate(UserRequest userRequest)
@@ -36,7 +38,7 @@ namespace University.Application.Services
                 .SingleOrDefault(x => x.Username == userRequest.Username 
                                    && x.Password == userRequest.Password);
 
-            if (user == null)
+            if (user is null)
             {
                 return new AuthenticationResult
                 {
@@ -68,31 +70,21 @@ namespace University.Application.Services
             await _repository.SaveChangesAsync();
 
             return new AuthenticationResult 
-            { 
-                UserResponse = new UserResponse 
-                {
-                    UserID = user.UserID,
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
-                    Username = user.Username,
-                    Token = user.Token
-                }
+            {
+                UserResponse = _mapper.Map<UserResponse>(user),
+                ErrorMessages = new List<string>()
             };
         }
 
         public async Task<IEnumerable<UserResponse>> GetAll()
-            => (await _repository.GetAllAsync()).Select(user =>
-            new UserResponse
-            {
-                UserID = user.UserID,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Username = user.Username,
-            });
+        {
+            var users = await _repository.GetAllAsync();
+            return _mapper.Map<List<UserResponse>>(users);
+        }
 
         public async Task<bool> Login(UserRequest userRequest)
         {
-            bool userIsValid = _repository.CurrentSet
+            bool userIsValid = (await _repository.GetAllAsync())
                 .Any(u => u.Username == userRequest.Username 
                        && u.Password == userRequest.Password);
 
@@ -102,8 +94,8 @@ namespace University.Application.Services
                 {
                     new Claim(ClaimTypes.Name, userRequest.Username),
                     new Claim(ClaimTypes.NameIdentifier, userRequest.Username),
-                    new Claim(ClaimTypes.Role, "Admin"),
-                    new Claim(ClaimTypes.Country, "Ukraine")
+                    new Claim(ClaimTypes.Role, Role),
+                    new Claim(ClaimTypes.Country, Country)
                 };
 
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);

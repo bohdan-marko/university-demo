@@ -26,7 +26,7 @@ namespace University.Application.Controllers
         }
 
 
-        [HttpPost("authenticate")]
+        [HttpPost("login")]
         public async Task<IActionResult> Authenticate([FromBody] UserRequest userRequest)
         {
             var response = await _service.Authenticate(userRequest);

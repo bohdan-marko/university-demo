@@ -1,18 +1,25 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using PIS.DAL;
-using PIS.DAL.Models;
-using PIS.DAL.Repositories;
+using University.DAL;
+using University.DAL.Repositories;
 using System.Text;
+using University.Application.MappingProfiles;
 using University.Application.Services;
 using University.Application.Services.Abstract;
-using University.WebAPI.Configurations;
+using University.Application.Configurations;
+using University.WebAPI.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Host.ConfigureLogging(config => 
+{
+    config.ClearProviders();
+    config.AddConsole();
+});
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
 #region Jwt Settings
 var key = Encoding.ASCII.GetBytes(builder.Configuration.GetValue("JwtSettings:Secret", string.Empty));
@@ -39,17 +46,14 @@ builder.Services.AddAuthentication(x =>
 builder.Services.AddDbContext<ApplicationDbContext>(
         options => options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServer")));
 
-builder.Services.AddOptions();
-builder.Services.Configure<JwtSettings>(
-    builder.Configuration.GetSection("JwtSettings"));
-
 //Inject services
 builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-builder.Services.AddScoped<IBaseService<Worker>, WorkerService>();
-builder.Services.AddScoped<IBaseService<Workplace>, WorkplaceService>();
-builder.Services.AddScoped<IBaseService<Job>, JobService>();
+builder.Services.AddSingleton<IJwtSettings, JwtSettings>();
+builder.Services.AddScoped<IWorkerService, WorkerService>();
 builder.Services.AddScoped<IJwtUserService, UserService>();
+
+builder.Services.AddAutoMapper(typeof(Program), typeof(MapperProfile));
 
 var app = builder.Build();
 
@@ -57,6 +61,8 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.MapControllers();
 

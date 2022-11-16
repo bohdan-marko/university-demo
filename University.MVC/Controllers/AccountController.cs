@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 using University.Application.Models;
 using University.Application.Services.Abstract;
 
@@ -18,9 +17,7 @@ namespace University.MVC.Controllers
 
         public IActionResult Index()
         {
-            ClaimsPrincipal currentUser = HttpContext.User;
-
-            if (currentUser.Identity.IsAuthenticated)
+            if (HttpContext.User.Identity.IsAuthenticated)
             {
                 return RedirectToAction("Index", "Home");
             }

@@ -1,81 +1,52 @@
-﻿using PIS.DAL.Models;
-using PIS.DAL.Repositories;
+﻿using AutoMapper;
+using University.DAL.Domain;
+using University.DAL.Repositories;
+using University.Application.DTO;
+using University.Application.Models.Create;
+using University.Application.Models.Update;
 using University.Application.Services.Abstract;
 
 namespace University.Application.Services
 {
-    public class WorkerService : IBaseService<Worker>
+    public class WorkerService : IWorkerService
     {
         private readonly IBaseRepository<Worker> _repository;
+        private readonly IMapper _mapper;
 
-        public WorkerService(IBaseRepository<Worker> repository)
+        public WorkerService(IBaseRepository<Worker> repository, IMapper mapper)
         {
             _repository = repository ?? throw new ArgumentNullException(nameof(repository));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         public async Task<bool> Delete(int id)
         {
-            try
-            {
-                var affectedRows = await _repository.DeleteAsync(id);
-                return affectedRows > 0;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            var affectedRows = await _repository.DeleteAsync(id);
+            return affectedRows > 0;
         }
 
-        public async Task<Worker> Get(int id)
+        public async Task<WorkerDto> Get(int id)
         {
-            try
-            {
-                var worker = await _repository.GetAsync(id);
-                return worker;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            var worker = await _repository.GetAsync(id);
+            return _mapper.Map<WorkerDto>(worker);
         }
 
-        public async Task<IEnumerable<Worker>> GetAll()
+        public async Task<IEnumerable<WorkerDto>> GetAll()
         {
-            try
-            {
-                var workers = await _repository.GetAllAsync();
-                return workers;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            var workers = await _repository.GetAllAsync();
+            return _mapper.Map<List<WorkerDto>>(workers);
         }
 
-        public async Task<bool> Insert(Worker entity)
+        public async Task<bool> Insert(WorkerCreateRequest entity)
         {
-            try
-            {
-                var affectedRows = await _repository.InsertAsync(entity);
-                return affectedRows > 0;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            var affectedRows = await _repository.InsertAsync(_mapper.Map<Worker>(entity));
+            return affectedRows > 0;
         }
 
-        public async Task<bool> Update(Worker entity)
+        public async Task<bool> Update(WorkerUpdateRequest entity)
         {
-            try
-            {
-                var affectedRows = await _repository.UpdateAsync(entity);
-                return affectedRows > 0;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            var affectedRows = await _repository.UpdateAsync(_mapper.Map<Worker>(entity));
+            return affectedRows > 0;
         }
     }
 }

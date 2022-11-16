@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PIS.DAL.Contracts;
-using PIS.DAL.Models;
+using University.DAL.Contracts;
+using University.DAL.Models;
 
-namespace PIS.DAL
+namespace University.DAL
 {
     public class ApplicationDbContext : DbContext
     {

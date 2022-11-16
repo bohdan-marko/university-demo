@@ -1,6 +1,19 @@
-﻿namespace University.WebAPI.Configurations;
+﻿using Microsoft.Extensions.Configuration;
 
-public class JwtSettings
+namespace University.Application.Configurations;
+
+public class JwtSettings : IJwtSettings
 {
-    public string Secret { get; set; }
+    private readonly IConfiguration _configuration;
+
+    public JwtSettings(IConfiguration configuration)
+    {
+        _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+    }
+
+    public string Secret => _configuration["JwtSettings:Secret"];
+
+    public string Issuer => _configuration["JwtSettings:Issuer"];
+
+    public string Audience => _configuration["JwtSettings:Audience"];
 }

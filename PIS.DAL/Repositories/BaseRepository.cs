@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PIS.DAL.Models;
+using University.DAL.Contracts.Base;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace PIS.DAL.Repositories
+namespace University.DAL.Repositories
 {
     public class BaseRepository<T> : IBaseRepository<T> where T : BaseEntity
     {
