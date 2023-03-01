@@ -5,13 +5,13 @@ VisualStudioVersion = 17.3.32929.385
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{D68C5F4C-DC5A-4CBF-91E7-50E0CF86E13F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "University.Application", "src\University.Application\University.Application.csproj", "{25FDFD2E-1481-43CE-82B4-6822B17E4B9C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "University.Domain", "src\University.Application\University.Domain.csproj", "{25FDFD2E-1481-43CE-82B4-6822B17E4B9C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "University.DAL", "src\University.DAL\University.DAL.csproj", "{CC3A5D7B-39AD-4F8C-8E76-31348CB8B6E0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "University.Infrastructure", "src\University.DAL\University.Infrastructure.csproj", "{CC3A5D7B-39AD-4F8C-8E76-31348CB8B6E0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "University.MVC", "src\University.MVC\University.MVC.csproj", "{D93EEDB8-DC65-4E18-9E22-8ADDE4FA6F03}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "University.WebAPI", "src\University.WebAPI\University.WebAPI.csproj", "{3E6C1062-21A4-4D51-97AB-96AE0C96567C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "University.API", "src\University.WebAPI\University.API.csproj", "{3E6C1062-21A4-4D51-97AB-96AE0C96567C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
