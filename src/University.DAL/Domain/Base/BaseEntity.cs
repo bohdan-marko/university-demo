@@ -1,5 +1,5 @@
 ﻿namespace University.DAL.Domain.Base;
 
-public class BaseEntity
+public abstract class BaseEntity
 {
 }

@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
-using University.DAL.Domain;
 using University.Application.DTO;
 using University.Application.Models.Create;
 using University.Application.Models.Update;
 using University.Application.Models;
+using University.DAL.Domain;
 
 namespace University.Application.MappingProfiles;
 
